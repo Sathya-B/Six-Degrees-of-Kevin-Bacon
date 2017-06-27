@@ -11,3 +11,4 @@ Steps:
 4. You should be able to see the visual representation in http://localhost:8080
 
 
+![Screenshot](bacon.jpeg)

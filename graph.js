@@ -8,6 +8,10 @@ function Graph() {
 
   // Now a "rest distance" between nodes
   this.springLength = 125;
+
+  //Graph start and end
+  this.graphStart = null;
+  this.graphEnd = null;
 }
 
 Graph.prototype.addNode = function (node) {
@@ -21,6 +25,35 @@ Graph.prototype.getNode = function (actor) {
   return n;
 }
 
+//Graph start and end
+
+Graph.prototype.setGraphStart = function (actor) {
+
+  this.graphStart = this.graph[actor];
+  return this.graphStart;
+}
+
+Graph.prototype.setGraphEnd = function (actor) {
+  this.graphEnd = this.graph[actor];
+  return this.graphEnd;
+}
+
+Graph.prototype.resetStartEnd = function ()
+{
+  for(var i=0; i < this.nodes.length; i++)
+  {
+    this.nodes[i].searched = false;
+    this.nodes[i].parent = null;
+
+    if(this.nodes[i].movie == false)
+    {
+      this.nodes[i].col = color(96, 88, 158);
+    }
+    else{
+      this.nodes[i].col = color(155, 55, 55);
+    }
+  }
+}
 
 
 // Set start
@@ -91,8 +124,7 @@ Graph.prototype.simulate = function () {
     else {
       node.pos.add(node.vel);
     }
-    if(locationw > 3)
-    {
+    if (locationw > 3) {
       locationw = .5;
       locationh = locationh + 1.25;
     }

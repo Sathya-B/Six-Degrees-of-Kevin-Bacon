@@ -4,11 +4,19 @@ function preload(){
 data = loadJSON('kevinbacon.json');
 }
 
+var dropdownactor1;
+var dropdownactor2;
+var textbox ;
+
 function setup(){
+dropdownactor1 = createSelect();;
+dropdownactor2 = createSelect();;
+dropdownactor1.changed(breadthFirstSearch);
+dropdownactor2.changed(breadthFirstSearch);
+textbox = createElement('h1',"");
 createCanvas(1000, 1000);
 
 var movies = data.movies;
-
  
 for (var i=0; i < movies.length; i++)
 {   
@@ -27,6 +35,7 @@ for (var i=0; i < movies.length; i++)
     movieNode.col = color(155, 55, 55);
     movieNode.movie = true;
     graph.addNode(movieNode);
+    
     for(var j=0; j < cast.length; j++)
     {
         var actor = cast[j];
@@ -35,6 +44,8 @@ for (var i=0; i < movies.length; i++)
         if(actorNode == undefined)
         {
             actorNode = new Node(actor);
+            dropdownactor1.option(actor);
+            dropdownactor2.option(actor);
         }
         actorNode.col = color(96, 88, 158);
         graph.addNode(actorNode);
@@ -69,3 +80,70 @@ function mouseReleased(){
     }
     node = undefined;
 }
+
+
+function breadthFirstSearch(){
+
+result = ''
+graph.resetStartEnd();
+
+var startNode = graph.setGraphStart(dropdownactor1.value());
+var endNode = graph.setGraphEnd(dropdownactor2.value());
+
+
+console.log(startNode);
+console.log(endNode);
+
+var queue = [];
+
+startNode.searched = true;
+queue.push(startNode);
+
+while(queue.length > 0)
+{   
+    var currentNode = queue.shift();
+    if(currentNode == endNode) {
+        console.log("Found " + currentNode.value);
+        break;
+    }
+    else{
+        console.log("Not Found");
+    }
+    for(var i=0; i < currentNode.edges.length; i++)
+    {
+        var neighbor = currentNode.edges[i];      
+        if(!neighbor.searched)
+        {
+            neighbor.searched = true;
+            neighbor.parent = currentNode;
+            queue.push(neighbor); 
+        }
+    }
+
+}
+
+var path = [];
+path.push(endNode);
+var next = endNode.parent;
+while(next!=null){
+  path.push(next);
+  next = next.parent;
+}
+
+for(var i=0; i < path.length; i++)
+{
+    var node = path[path.length-(i+1)];
+    node.col = color(98,0,78)
+    result += node.value;
+    if(i!= path.length -1)
+    {
+        result  += "-->";
+    }
+}
+
+textbox.elt.textContent = result;
+}
+
+var result = '';
+
+
